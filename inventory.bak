@@ -1,0 +1,4 @@
+[linuxservers]
+ec2-3-223-183-165.compute-1.amazonaws.com ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ec2-13-217-192-206.compute-1.amazonaws.com ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ec2-52-72-107-70.compute-1.amazonaws.com ansible_ssh_common_args='-o StrictHostKeyChecking=no'

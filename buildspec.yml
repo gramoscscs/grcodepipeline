@@ -1,0 +1,30 @@
+version: 0.2
+
+env:
+    secrets-manager:
+        SECRET_VALUE: "arn:aws:secretsmanager:us-east-1:558326840038:secret:GR-Ansible-Private-Key-FoYWft"
+
+phases:
+    install:
+        runtime-versions:
+            python: 3.8
+        commands:
+            - pip install ansible boto3
+    pre_build:
+        commands:
+            - ansible --version
+            - ansible-galaxy install -r requirements.yml
+    build:
+        commands:
+            - echo $SECRET_VALUE
+            - echo "Build started on " $(date)
+            - aws secretsmanager get-secret-value --region us-east-1 --secret-id GR-Ansible-Private-Key --query SecretString --output text | tee ~/.ssh/ansible.pem
+            - chmod 600 ~/.ssh/ansible.pem
+            - stat -c %a ~/.ssh/ansible.pem
+            - ansible-playbook -i inventory hello-world.yml --user ec2-user --private-key ~/.ssh/ansible.pem
+    post_build:
+        commands:
+            - echo "Build completed on " $(date)
+artifacts:
+    files:
+        - '**/*'
